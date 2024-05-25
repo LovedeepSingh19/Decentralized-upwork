@@ -5,7 +5,11 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "deploy:backend": "cd apps/backend && npx prisma migrate deploy && node dist/index.js",
+    "deploy:user-frontend": "cd apps/user-frontend && npm run build",
+    "deploy:worker-frontend": "cd apps/worker-frontend && npm run build",
+    "deploy": "npm run deploy:user-frontend && npm run deploy:worker-frontend && npm run deploy:backend"
   },
   "devDependencies": {
     "@repo/eslint-config": "*",
