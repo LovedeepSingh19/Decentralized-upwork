@@ -10,14 +10,14 @@ import { useWallet, useConnection } from "@solana/wallet-adapter-react";
 export const Upload = () => {
   const [images, setImages] = useState<string[]>([]);
   const [title, setTitle] = useState("");
-  const [result, setResult] = useState("");
+  const [result, setResult] = useState<string|null>();
   const [txSignature, setTxSignature] = useState("");
   const { publicKey, sendTransaction } = useWallet();
   const { connection } = useConnection();
   const router = useRouter();
 
   async function onSubmit() {
-    if(result && title){
+    if(title){
 
         const response = await axios.post(
           `${BACKEND_URL}/v1/user/task`,
@@ -26,7 +26,7 @@ export const Upload = () => {
               imageUrl: image,
             })),
             title: title,
-            result: result,
+            result: result ?? null,
             signature: txSignature,
           },
           {
@@ -97,10 +97,9 @@ export const Upload = () => {
               setResult(e.target.value);
           }}
           type="text"
-          id="first_name"
+          id="name"
           className="ml-4 mt-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
           placeholder="Please enter the correct option"
-          required
         />
 
         <label className="pl-4 block mt-8 text-md font-medium text-gray-900">

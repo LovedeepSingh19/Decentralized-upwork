@@ -5,7 +5,7 @@ export const createTaskInput = z.object({
     options: z.array(z.object({
         imageUrl: z.string()
     })).min(2),
-    result: z.string(),
+    result: z.string().nullable(),
     title: z.string(),
     signature: z.string()
 });

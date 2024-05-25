@@ -67,7 +67,7 @@ console.log(currentTask)
         </div>
         <div className='flex justify-center pt-8'>
             {currentTask.options.map(option => <Option onSelect={async () => {
-                if(option.result === true){
+                if(option.result === true || option.result === null){
 
                     setSubmitting(true);
                     try {
