@@ -35,7 +35,7 @@ export const Upload = () => {
         const transaction = new Transaction().add(
             SystemProgram.transfer({
                 fromPubkey: publicKey!,
-                toPubkey: new PublicKey(process.env.PARRENT_WALLET_ADD!),
+                toPubkey: new PublicKey(process.env.PUBLIC_PARRENT_WALLET_ADD!),
                 lamports: 100000000,
             })
         );
