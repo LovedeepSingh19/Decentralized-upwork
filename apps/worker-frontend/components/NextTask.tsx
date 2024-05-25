@@ -10,6 +10,7 @@ interface Task {
     "options": {
         id: number;
         image_url: string;
+        result: boolean;
         task_id: number
     }[]
 }
@@ -20,7 +21,7 @@ export const NextTask = () => {
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
 
-    useEffect(() => {
+    const nextTaskFetch = () => {
         setLoading(true);
         axios.get(`${BACKEND_URL}/v1/worker/nextTask`, {
             headers: {
@@ -35,6 +36,10 @@ export const NextTask = () => {
                 setLoading(false)
                 setCurrentTask(null)
             })
+    }
+
+    useEffect(() => {
+        nextTaskFetch()
     }, [])
     
     if (loading) {
@@ -52,7 +57,7 @@ export const NextTask = () => {
             </div>
         </div>
     }
-
+console.log(currentTask)
     return <div>
         <div className='text-2xl pt-20 flex justify-center'>
             {currentTask.title}
@@ -62,28 +67,34 @@ export const NextTask = () => {
         </div>
         <div className='flex justify-center pt-8'>
             {currentTask.options.map(option => <Option onSelect={async () => {
-                setSubmitting(true);
-                try {
-                    const response = await axios.post(`${BACKEND_URL}/v1/worker/submission`, {
-                        taskId: currentTask.id.toString(),
-                        selection: option.id.toString()
-                    }, {
-                        headers: {
-                            "Authorization": localStorage.getItem("token")
+                if(option.result === true){
+
+                    setSubmitting(true);
+                    try {
+                        const response = await axios.post(`${BACKEND_URL}/v1/worker/submission`, {
+                            taskId: currentTask.id.toString(),
+                            selection: option.id.toString()
+                        }, {
+                            headers: {
+                                "Authorization": localStorage.getItem("token")
+                            }
+                        });
+        
+                        const nextTask = response.data.nextTask;
+                        if (nextTask) {
+                            setCurrentTask(nextTask)
+                        } else {
+                            setCurrentTask(null);
                         }
-                    });
-    
-                    const nextTask = response.data.nextTask;
-                    if (nextTask) {
-                        setCurrentTask(nextTask)
-                    } else {
-                        setCurrentTask(null);
+                        // refresh the user balance in the appbar
+                    } catch(e) {
+                        console.log(e);
                     }
-                    // refresh the user balance in the appbar
-                } catch(e) {
-                    console.log(e);
+                    setSubmitting(false);
+                }else{
+                    console.log("error  --  wrong selection")
+                    nextTaskFetch()
                 }
-                setSubmitting(false);
 
             }} key={option.id} imageUrl={option.image_url} />)}
         </div>

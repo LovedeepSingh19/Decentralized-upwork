@@ -44,6 +44,7 @@ model Option {
   id          Int        @id @default(autoincrement())
   image_url   String
   task_id     Int
+  result      Boolean
   task        Task       @relation(fields: [task_id], references: [id])
   submissions Submission[]
 }
