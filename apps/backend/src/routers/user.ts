@@ -10,7 +10,7 @@ import { createTaskInput } from "../types";
 import { Connection, PublicKey, Transaction } from "@solana/web3.js";
 import { parrent_wallet_address } from "../privateKey";
 
-const connection = new Connection(process.env.RPC_URL ?? "");
+const connection = new Connection(process.env.PUBLIC_RPC_URL ?? "");
 
 const PARENT_WALLET_ADDRESS = parrent_wallet_address
     
@@ -30,7 +30,7 @@ const prismaClient = new PrismaClient();
 
 
 prismaClient.$transaction(
-    async (prisma) => {
+    async (prisma:any) => {
       // Code running in a transaction...
     },
     {
@@ -78,7 +78,7 @@ router.get("/task", authMiddleware, async (req, res) => {
         }
     }> = {};
 
-    taskDetails.options.forEach(option => {
+    taskDetails.options.forEach((option:any) => {
         result[option.id] = {
             count: 0,
             option: {
@@ -87,7 +87,7 @@ router.get("/task", authMiddleware, async (req, res) => {
         }
     })
 
-    responses.forEach(r => {
+    responses.forEach((r:any) => {
         result[r.option_id].count++;
     });
 
@@ -147,7 +147,7 @@ router.post("/task", authMiddleware, async (req, res) => {
     // parse the signature here to ensure the person has paid 0.1 SOL
     // const transaction = Transaction.from(parseData.data.signature);
 
-    let response = await prismaClient.$transaction(async tx => {
+    let response = await prismaClient.$transaction(async (tx:any) => {
 
         const response = await tx.task.create({
             data: {

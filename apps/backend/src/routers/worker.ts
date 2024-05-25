@@ -9,14 +9,14 @@ import { createSubmissionInput } from "../types";
 import { Connection, Keypair, PublicKey, SystemProgram, Transaction, sendAndConfirmTransaction } from "@solana/web3.js";
 import { parrent_wallet_address, privateKey } from "../privateKey";
 import { decode } from "bs58";
-const connection = new Connection(process.env.RPC_URL ?? "");
+const connection = new Connection(process.env.PUBLIC_RPC_URL ?? "");
 
 const TOTAL_SUBMISSIONS = 100;
 
 const prismaClient = new PrismaClient();
 
 prismaClient.$transaction(
-    async (prisma) => {
+    async (prisma:any) => {
       // Code running in a transaction...
     },
     {
@@ -73,7 +73,7 @@ router.post("/payout", workerMiddleware, async (req, res) => {
     console.log(signature)
 
     // We should add a lock here
-    await prismaClient.$transaction(async tx => {
+    await prismaClient.$transaction(async (tx:any) => {
         await tx.worker.update({
             where: {
                 id: Number(userId)
@@ -139,7 +139,7 @@ router.post("/submission", workerMiddleware, async (req, res) => {
 
         const amount = (Number(task.amount) / TOTAL_SUBMISSIONS).toString();
 
-        const submission = await prismaClient.$transaction(async tx => {
+        const submission = await prismaClient.$transaction(async (tx:any) => {
             const submission = await tx.submission.create({
                 data: {
                     option_id: Number(parsedBody.data.selection),
